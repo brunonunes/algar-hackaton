@@ -1,27 +1,27 @@
-module.exports = function(controller) {
+module.exports = (controller) => {
 
-  controller.middleware.spawn.use(function(bot, next) {
+  controller.middleware.spawn.use((bot, next) => {
 
     if (controller.studio_identity) {
-      bot.identity = controller.studio_identity;
-      bot.identity.id = controller.studio_identity.botkit_studio_id;
+      bot.identity = controller.studio_identity
+      bot.identity.id = controller.studio_identity.botkit_studio_id
     } else {
       bot.identity = {
           name: 'Botkit for Web',
           id: 'web',
       }
     }
-    next();
+    next()
 
   })
 
-
-  controller.middleware.receive.use(function(bot, message, next) {
+  controller.middleware.receive.use((bot, message, next) => {
 
     if (!message.user_profile) {
-      next();
+      next()
     } else {
-      controller.storage.users.get(message.user, function(err, user) {
+      controller.storage.users.get(message.user, (err, user) => {
+
         if (!user) {
           user = {
             id: message.user,
@@ -29,27 +29,22 @@ module.exports = function(controller) {
           }
         }
 
-        user.name = message.user_profile.name;
+        user.name = message.user_profile.name
 
-        for (var key in message.user_profile) {
-          if (key != 'name' && key != 'id') {
-            user.attributes[key] = message.user_profile[key];
-          }
+        for (const key in message.user_profile) {
+          if (key != 'name' && key != 'id') user.attributes[key] = message.user_profile[key]
         }
 
-        controller.storage.users.save(user, function(err) {
+        controller.storage.users.save(user, (err) => {
 
-          // log the updated user profile info from this user.
-          controller.metrics.user(bot, message);
+          controller.metrics.user(bot, message)
+          next()
 
-          next();
+        })
 
-        });
-
-      });
+      })
     }
 
-  });
-
+  })
 
 }

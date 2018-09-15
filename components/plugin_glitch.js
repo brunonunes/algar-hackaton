@@ -1,17 +1,15 @@
-var request = require('request');
-module.exports = function(controller) {
+const request = require('request')
+module.exports = (controller) => {
 
-  function keepalive() {
+  const keepalive = () => {
 
     request({
       url: 'http://' + process.env.PROJECT_DOMAIN + '.glitch.me',
-    }, function(err) {
+    }, (err) => {
 
-      setTimeout(function() {
-        keepalive();
-      }, 55000);
+      setTimeout(keepalive, 55000)
 
-    });
+    })
 
   }
 

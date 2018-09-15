@@ -1,25 +1,21 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = mongoose.Schema.Types.ObjectId;
-var debug = require('debug')('botkit:db');
-module.exports = function(config) {
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Schema.Types.ObjectId
+const debug = require('debug')('botkit:db')
 
+module.exports = function(config) {
 
   mongoose.connect(process.env.MONGO_URI, {
     useMongoClient: true
-  });
+  })
 
-  mongoose.Promise = global.Promise;
+  mongoose.Promise = global.Promise
 
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
-    // we're connected!
-    debug('CONNECTED TO DB!');
-  });
+  const db = mongoose.connection
+  db.on('error', console.error.bind(console, 'connection error:'))
+  db.once('open', () => debug('CONNECTED TO DB!'))
 
-
-  var userSchema = new Schema({
+  const userSchema = new Schema({
     id: {
       type: String,
       index: true,
@@ -31,10 +27,9 @@ module.exports = function(config) {
     },
   })
 
-  var users = mongoose.model('user', userSchema);
+  const users = mongoose.model('user', userSchema)
 
-
-  var historySchema = new Schema({
+  const historySchema = new Schema({
     userId: {
       type: String,
       index: true,
@@ -46,7 +41,7 @@ module.exports = function(config) {
     }
   })
 
-  var history = mongoose.model('history', historySchema);
+  const history = mongoose.model('history', historySchema)
 
   return {
     teams: {
