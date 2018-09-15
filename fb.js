@@ -9,7 +9,9 @@ const bot_options = {
   studio_command_uri: process.env.studio_command_uri,
   studio_stats_uri: process.env.studio_command_uri,
   replyWithTyping: true,
-  debug: true
+  debug: true,
+  access_token: process.env.FB_ACCESS_TOKEN,
+  verify_token: process.env.FB_VERIFY_TOKEN
 }
 
 if (process.env.MONGO_URI) {
@@ -19,11 +21,7 @@ if (process.env.MONGO_URI) {
   bot_options.json_file_store = __dirname + '/.data/db/'
 }
 
-const controller = Botkit.socketbot(bot_options)
-// const controller = Botkit.facebookbot({
-//   access_token: process.env.FB_ACCESS_TOKEN,
-//   verify_token: process.env.FB_VERIFY_TOKEN
-// })
+const controller = Botkit.facebookbot(bot_options)
 
 const webserver = require(__dirname + '/components/express_webserver.js')(controller)
 
@@ -46,14 +44,12 @@ controller.metrics = require('botkit-studio-metrics')(controller)
 
 controller.openSocketServer(controller.httpserver)
 
-// const bot = controller.spawn({})
-// controller.setupWebserver((process.env.port || 4000), (err, webserver) => {
-//   controller.createWebhookEndpoints(controller.webserver, bot, () => {
-//       console.log('This bot is online!!!');
-//   })
-// })
-
-controller.startTicking()
+const bot = controller.spawn({})
+controller.setupWebserver((process.env.port || 4000), (err, webserver) => {
+  controller.createWebhookEndpoints(controller.webserver, bot, () => {
+      console.log('This bot is online!!!');
+  })
+})
 
 const normalizedPath = require("path").join(__dirname, "skills")
 require("fs").readdirSync(normalizedPath).forEach(file => require("./skills/" + file)(controller))

@@ -17,27 +17,27 @@ module.exports = (controller) => {
 
     const logMessage = (message, user) => {
 
-        if (message.type == 'message' || message.type == 'message_received') {
-          controller.storage.history.addToHistory(message, message.user).catch((err) => {
-            console.error('Error storing history: ',err)
-          })
-        }
+      if (message.type == 'message' || message.type == 'message_received') {
+        controller.storage.history.addToHistory(message, message.user).catch((err) => {
+          console.error('Error storing history: ',err)
+        })
+      }
     }
 
     // log incoming messages to the user history
     controller.middleware.receive.use((bot, message, next) => {
-        controller.storage.users.get(message.user, (err, user) => {
-            logMessage(message,user)
-        })
-        next()
+      controller.storage.users.get(message.user, (err, user) => {
+        logMessage(message,user)
+      })
+      next()
     })
-
+    
 
     controller.middleware.format.use((bot, message, platform_message, next) => {
-        controller.storage.users.get(message.to, (err, user) => {
-            logMessage(platform_message,user)
-        })
-        next()
+      controller.storage.users.get(message.to, (err, user) => {
+        logMessage(platform_message,user)
+      })
+      next()
     })
 
   } else {

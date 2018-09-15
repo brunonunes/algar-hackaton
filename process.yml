@@ -1,0 +1,8 @@
+apps:
+  - script: 'bot.js'
+    name: 'algar-tech'
+    exec_mode: 'cluster'
+    instances: 'max'
+    max_restarts: 50
+    restart_delay: 10000
+    trace: true

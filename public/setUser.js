@@ -10,12 +10,10 @@ function getParameterByName(name, url) {
 
 console.log("Identify user", {
   id: getParameterByName('user') || null,
-  first_name: getParameterByName('first_name') || null,
-  last_name:  getParameterByName('last_name') || null
+  first_name: getParameterByName('first_name') || null
 })
 
 Botkit.identifyUser({
   id: getParameterByName('user') || null,
-  first_name: getParameterByName('first_name') || null,
-  last_name:  getParameterByName('last_name') || null
+  first_name: getParameterByName('first_name') || null
 })
